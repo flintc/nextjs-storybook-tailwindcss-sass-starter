@@ -1,0 +1,28 @@
+@use "sass:map";
+@use "sass:meta";
+@use "sass:list";
+@use "sass:string";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+$colors: [ "violet", "gray", "red", "lime" ];
+
+$btn-radius: theme("borderRadius.full");
+.btn {
+  border-radius: $btn-radius;
+  @apply px-4 py-2;
+}
+
+@layer components {
+  @each $color in $colors {
+    .btn-#{$color} {
+      font-weight: 800;
+      @apply bg-#{$color}-100 text-#{$color}-800;
+      &:hover {
+        @apply bg-#{$color}-200 text-#{$color}-900;
+      }
+    }
+  }
+}
