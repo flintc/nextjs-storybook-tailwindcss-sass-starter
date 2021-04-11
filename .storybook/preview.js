@@ -1,4 +1,6 @@
 import { RecoilRoot } from "recoil";
+import { QueryClient, QueryClientProvider } from "react-query";
+
 import "../src/styles/globals.scss";
 
 export const parameters = {
@@ -12,9 +14,14 @@ export const parameters = {
 };
 
 export const decorators = [
-  (Story) => (
-    <RecoilRoot>
-      <Story />
-    </RecoilRoot>
-  ),
+  (Story, { args: {} }) => {
+    const queryClient = new QueryClient();
+    return (
+      <RecoilRoot>
+        <QueryClientProvider client={queryClient}>
+          <Story />
+        </QueryClientProvider>
+      </RecoilRoot>
+    );
+  },
 ];

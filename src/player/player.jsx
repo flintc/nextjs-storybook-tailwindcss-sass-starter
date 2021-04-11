@@ -1,48 +1,48 @@
-import { PlayerInfo } from "../player-info";
+// import { PlayerInfo } from "../player-info";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Button, Drawer } from "../components";
-import { useRecoilState } from "recoil";
-import {
-  withMaybeControlledState,
-  withMaybeRecoilControlledState,
-} from "../hocs";
-import { useState } from "react";
+import { withMaybeRecoilControlledState } from "../hocs";
+import { usePlayersPageContext } from "../players-page-context";
 
-const PlayerPure = ({ player, state, setState }) => (
-  <div>
-    <div className="flex items-center space-x-4">
-      <span>{player.name}</span>
-      <Button
-        className="btn-violet"
-        onClick={() => setState((x) => ({ ...x, expanded: !x.expanded }))}
-      >
-        more info
-      </Button>
-    </div>
+const PlayerImpl = ({ player, state, setState }) => {
+  // console.log("player", player, state);
+  const { PlayerInfoContainer } = usePlayersPageContext();
+  // console.log("PlayerInfoContainer", PlayerInfoContainer);
+  return (
     <div>
-      <Drawer isOpen={state.editing || false}>
-        <input defaultValue={player.name} />
-      </Drawer>
+      <div className="flex items-center space-x-4">
+        <span>{player.name}</span>
+        <Button
+          className="btn-violet"
+          onClick={() => setState((x) => ({ ...x, expanded: !x.expanded }))}
+        >
+          more info
+        </Button>
+      </div>
+      <div>
+        {/* <Drawer isOpen={state.editing || false}>
+          <input defaultValue={player.name} />
+        </Drawer> */}
+      </div>
+      <div>
+        <Drawer isOpen={state.expanded}>
+          <PlayerInfoContainer playerId={player.id} />
+          {/* {playerInfo} */}
+        </Drawer>
+      </div>
     </div>
-    <div>
-      <Drawer isOpen={state.expanded}>
-        <PlayerInfo player={player.info} />
-      </Drawer>
-    </div>
-  </div>
-);
-
-const PlayerStateful = ({ defaultState, ...props }) => {
-  const [state, setState] = useState(defaultState);
-  return <PlayerPure {...props} state={state} setState={setState} />;
+  );
 };
 
-export const PlayerRecoilStateful = ({ player, state }) => {
+const PlayerRecoil = ({ state, player, ...props }) => {
   const [foo, setFoo] = useRecoilState(state(player.id));
-  return <PlayerPure player={player} state={foo} setState={setFoo} />;
+  return (
+    <PlayerImpl player={player} {...props} state={foo} setState={setFoo} />
+  );
 };
 
 export const Player = withMaybeRecoilControlledState(
   "state",
-  PlayerRecoilStateful,
-  withMaybeControlledState("state", PlayerStateful, PlayerPure)
+  PlayerRecoil,
+  PlayerImpl
 );

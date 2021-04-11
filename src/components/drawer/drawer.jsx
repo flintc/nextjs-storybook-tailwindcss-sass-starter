@@ -1,6 +1,7 @@
 import { Transition } from "@headlessui/react";
 
 export const Drawer = ({ isOpen, children, ...props }) => {
+  console.log(".addrawer", isOpen);
   return (
     <Transition
       show={isOpen}
