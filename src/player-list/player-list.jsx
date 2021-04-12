@@ -1,36 +1,17 @@
-import { atomFamily, useRecoilCallback, useRecoilValueLoadable } from "recoil";
 import { Button } from "../components";
 import { Player } from "../player";
-import { withMaybeRecoilControlledState } from "../hocs";
+import { useCallback } from "react";
+// import { useQueryClient } from "react-query";
+import { useQueryClient } from "../hooks";
 
-const expandedStateAtomFamily = atomFamily({
-  key: "expandedState",
-  default: {
-    expanded: false,
-  },
-});
-
-const PlayerListImpl = ({ players }) => {
-  const onExpandAll = useRecoilCallback(
-    ({ set }) => () => {
-      players.map((player) => {
-        set(expandedStateAtomFamily(player.id), (x) =>
-          x.expanded ? x : { ...x, expanded: true }
-        );
-      });
-    },
-    [players]
-  );
-  const onCollapseAll = useRecoilCallback(
-    ({ set }) => () => {
-      players.map((player) => {
-        set(expandedStateAtomFamily(player.id), (x) =>
-          !x.expanded ? x : { ...x, expanded: false }
-        );
-      });
-    },
-    [players]
-  );
+export const PlayerList = ({ players }) => {
+  const queryClient = useQueryClient();
+  const onExpandAll = useCallback(() => {
+    queryClient.setAllQueryData(["playerState"], { expanded: true });
+  }, [queryClient]);
+  const onCollapseAll = useCallback(() => {
+    queryClient.setAllQueryData(["playerState"], { expanded: false });
+  }, [queryClient]);
   return (
     <div>
       <div>
@@ -40,27 +21,10 @@ const PlayerListImpl = ({ players }) => {
       {players.map((playerData) => {
         return (
           <div>
-            <Player player={playerData} state={expandedStateAtomFamily} />
+            <Player player={playerData} />
           </div>
         );
       })}
     </div>
   );
 };
-
-const PlayerListConnected = ({ players }) => {
-  const players_ = useRecoilValueLoadable(players);
-  return (
-    <div>
-      {players_.state === "hasValue" && (
-        <PlayerListImpl players={players_.contents} />
-      )}
-    </div>
-  );
-};
-
-export const PlayerList = withMaybeRecoilControlledState(
-  "players",
-  PlayerListConnected,
-  PlayerListImpl
-);

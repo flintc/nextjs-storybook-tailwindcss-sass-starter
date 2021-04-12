@@ -13,11 +13,7 @@ const PlayerInfoContainer = ({ playerId }) => {
 export const Example = ({ player, state }) => {
   return (
     <PlayersPageContext.Provider value={{ PlayerInfoContainer }}>
-      <Player
-        player={player}
-        state={state}
-        // defaultState={{ expanded: false, editing: true }}
-      />
+      <Player player={player} state={state} />
     </PlayersPageContext.Provider>
   );
 };

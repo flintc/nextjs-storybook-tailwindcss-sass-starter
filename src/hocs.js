@@ -1,20 +1,3 @@
-export const withMaybeRecoilControlledState = (
-  propName,
-  ComponentIfRecoil,
-  ComponentIfNotRecoil
-) => {
-  const Component = (props) => {
-    const prop = props?.[propName];
-    if (
-      prop?.constructor?.name?.includes("Recoil") ||
-      typeof prop === "function"
-    ) {
-      return <ComponentIfRecoil {...props} />;
-    }
-    return <ComponentIfNotRecoil {...props} />;
-  };
-  return Component;
-};
 const capitalize = (s) => {
   if (typeof s !== "string") return "";
   return s.charAt(0).toUpperCase() + s.slice(1);

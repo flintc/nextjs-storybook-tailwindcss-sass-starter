@@ -28,12 +28,14 @@ const resolve = (valueOrFn, props) => {
 };
 
 export const PlayerListContainer = () => {
+  // const { isLoading, error, data, isFetching } = useQuery(
+  //   resolve(PlayerListContainer.queryId),
+  //   PlayerListContainer.query,
+  //   PlayerListContainer.queryOptions
+  // );
   const { isLoading, error, data, isFetching } = useQuery(
-    resolve(PlayerListContainer.queryId),
-    PlayerListContainer.query,
-    PlayerListContainer.queryOptions
+    PlayerListContainer.queryId
   );
-  console.log("query", isLoading, error, data);
   if (isLoading) {
     return "loading...";
   }
