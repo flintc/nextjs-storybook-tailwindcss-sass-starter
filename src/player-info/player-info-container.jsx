@@ -16,12 +16,14 @@ const resolve = (valueOrFn, props) => {
 export const PlayerInfoContainer = React.memo(({ playerId }) => {
   const { isLoading, error, data, isFetching } = useQuery(
     resolve(PlayerInfoContainer.queryId, { playerId }),
-    async () => {
-      const response = await PlayerInfoContainer.query({ playerId });
-      return response;
-    },
+    PlayerInfoContainer.query,
+    // async () => {
+    //   const response = await PlayerInfoContainer.query({ playerId });
+    //   return response;
+    // },
     PlayerInfoContainer.queryOptions
   );
+  console.log("container player info", isLoading, error, data);
   if (isLoading) {
     return "loading...";
   }
@@ -51,9 +53,10 @@ const getPlayerInfo = async (playerId) => {
   );
 };
 
-PlayerInfoContainer.queryId = ({ playerId }) => `playerInfo-${playerId}`;
-PlayerInfoContainer.query = async ({ playerId }) => {
-  const resp = await getPlayerInfo(playerId);
+PlayerInfoContainer.queryId = ({ playerId }) => ["playerInfo", playerId];
+PlayerInfoContainer.query = async ({ queryKey, ...rest }) => {
+  console.log("query key", queryKey, rest);
+  const resp = await getPlayerInfo(queryKey[1]);
   return resp.player[0];
 };
 PlayerInfoContainer.queryOptions = {

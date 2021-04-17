@@ -5,34 +5,7 @@ function sleep(ms) {
 }
 export default {
   title: "Player List",
-  decorators: [
-    (
-      Story,
-      { args: { players, delays = { players: 0, playerInfo: 0 } }, ...rest }
-    ) => {
-      return (
-        <PlayersPageMockProvider
-          spec={{
-            players: {
-              query: async () => {
-                await sleep(delays.players);
-                return players;
-              },
-            },
-            playerInfo: {
-              query: async ({ playerId }) => {
-                await sleep(delays.playerInfo);
-                return players.find((x) => x.id === playerId);
-              },
-              queryOptions: { staleTime: 0 },
-            },
-          }}
-        >
-          <Story />
-        </PlayersPageMockProvider>
-      );
-    },
-  ],
+  decorators: [],
   // component: PlayerList,
 };
 

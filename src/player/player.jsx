@@ -1,9 +1,10 @@
 import { Button, Drawer } from "../components";
 import { useSharedState } from "../hooks";
+import { PlayerInfoContainer } from "../player-info";
 import { usePlayersPageContext } from "../players-page-context";
 
 export const Player = ({ player }) => {
-  const { PlayerInfoContainer } = usePlayersPageContext();
+  // const { PlayerInfoContainer } = usePlayersPageContext();
   const [state, setState] = useSharedState(["playerState", { id: player.id }], {
     expanded: false,
   });
